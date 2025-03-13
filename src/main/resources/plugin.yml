@@ -1,0 +1,10 @@
+name: ${project.name}
+author: ${author}
+version: ${project.version}
+main: ${project.groupId}.${project.artifactId}
+api-version: 1.21
+commands:
+  eastereggs:
+    aliases: [ easter ]
+    description: Command for managing easter eggs
+    usage: /eastereggs help
