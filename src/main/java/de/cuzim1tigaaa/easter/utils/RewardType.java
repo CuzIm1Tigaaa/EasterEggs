@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum RewardType {
 
 	COINS("Coins", "/coins give %player% %amount%"),
-	ITEMS("", "/give %player% minecraft:%item% %amount%"),
+	ITEMS(null, "/give %player% minecraft:%item% %amount%"),
 	TALER("Taler", "/money give %player% %amount%");
 
 	private final String name, command;

@@ -23,7 +23,7 @@ import java.util.UUID;
 public class EasterEvents implements Listener {
 
 	@Getter
-	private static final Set<UUID> removedEggs = new HashSet<>();
+	private static final Set<UUID> removeEggs = new HashSet<>();
 
 	public EasterEvents(EasterEggs plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -41,9 +41,10 @@ public class EasterEvents implements Listener {
 			return;
 
 		UUID uuid = player.getUniqueId();
-		if(removedEggs.contains(uuid)) {
+		if(removeEggs.contains(uuid)) {
 			EggUtils.getEggs().remove(egg);
-			removedEggs.remove(uuid);
+			removeEggs.remove(uuid);
+
 			player.sendMessage("Egg removed");
 			player.sendMessage("Egg count: " + EggUtils.getEggs().size());
 			player.sendMessage("Category count: " + EggUtils.getEggsByCategory(egg.getCategory()).size());
@@ -57,7 +58,8 @@ public class EasterEvents implements Listener {
 		}
 
 		if(ProgressUtils.hasPlayerProgress(progress, egg)) {
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("You already found this egg"));
+			player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+					new TextComponent("You already found this egg"));
 			return;
 		}
 

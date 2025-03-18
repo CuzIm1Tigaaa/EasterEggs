@@ -1,0 +1,30 @@
+Category:
+  '1':
+    name: '&cRot'
+    headURL: '2d6b469f66a574596f1eb51facdcaa1522a486011700854cedc4796e44f23b90'
+    type: 'TALER'
+    min: 1
+    max: 10
+  '2':
+    name: '&aGrün'
+    headURL: '86faad7e998c5f3b8332ca55c901120b9ae17f0193dd8e01a83cfb9580848325'
+    type: 'COINS'
+    min: 1
+    max: 10
+  '3':
+    name: '&9Blau'
+    headURL: '824fcd2314217cd5da149d063a4e7159bc70daea4a636ad923a54b2ae240eab0'
+    type: 'ITEMS'
+    min: 1
+    max: 10
+    materials:
+      - 'DIAMOND'
+      - 'GOLD_INGOT'
+      - 'IRON_INGOT'
+      - 'EMERALD'
+      - 'LAPIS_LAZULI'
+      - 'REDSTONE'
+      - 'QUARTZ'
+      - 'COAL'
+      - 'NETHERITE_INGOT'
+      - 'AMETHYST_SHARD'

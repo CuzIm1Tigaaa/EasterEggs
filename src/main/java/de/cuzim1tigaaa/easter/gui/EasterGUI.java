@@ -13,7 +13,7 @@ public class EasterGUI extends GUI {
 
 	@Override
 	public Inventory getInventory() {
-		return Bukkit.createInventory(null, 27, "&eOster Eier Übersicht");
+		return Bukkit.createInventory(null, 27, "&eOstereier Übersicht");
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class Messages {
 	private static final EasterEggs PLUGIN = EasterEggs.getPlugin(EasterEggs.class);
 	private static Messages messages;
 
-	public static Messages getInstance() {
+	public static Messages getMessages() {
 		if(messages == null)
 			messages = new Messages();
 		return messages;
@@ -60,11 +60,11 @@ public class Messages {
 		messagesFile = YamlConfiguration.loadConfiguration(messageFile);
 		messagesFile.options().setHeader(List.of("Alle Chatnachrichten, die das Plugin nutzt"));
 
-		set(MESSAGES_SENDER,                        "&cDu musst ein Spieler sein, um diesen Befehl ausführen zu können!");
-		set(MESSAGES_PERMISSION,                    "&cDu darfst diesen Befehl nicht benutzen!");
-		set(MESSAGES_SYNTAX,                        "&cFalsche Benutzung! &8» &c%SYNTAX%");
-		set(MESSAGES_RELOAD,                        "&7Das Plugin wurde neu geladen! &8[&9%TIME%ms&8]");
-		set(MESSAGES_GUI_NO_DATA,                   "&cEs wurden keine Daten gefunden!");
+		set(Paths.MESSAGES_SENDER,              "&cDu musst ein Spieler sein, um diesen Befehl ausführen zu können!");
+		set(Paths.MESSAGES_PERMISSION,          "&cDu darfst diesen Befehl nicht benutzen!");
+		set(Paths.MESSAGES_SYNTAX,              "&cFalsche Benutzung! &8» &c%SYNTAX%");
+		set(Paths.MESSAGES_RELOAD,              "&7Das Plugin wurde neu geladen! &8[&9%TIME%ms&8]");
+		set(Paths.MESSAGES_GUI_NO_DATA,         "&cEs wurden keine Daten gefunden!");
 
 		messagesFile.save(messageFile);
 	}
@@ -77,5 +77,15 @@ public class Messages {
 	}
 	public static String format(String s, Object... obj) {
 		return ChatColor.translateAlternateColorCodes('&', String.format(s, obj));
+	}
+
+	public static String capitalizeFully(String s) {
+		s = s.replace("_", " ").toLowerCase();
+		String[] words = s.split(" ");
+		StringBuilder sb = new StringBuilder();
+		for(String word : words) {
+			sb.append(word.substring(0, 1).toUpperCase()).append(word.substring(1)).append(" ");
+		}
+		return sb.toString().trim();
 	}
 }

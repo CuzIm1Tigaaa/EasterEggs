@@ -1,90 +1,89 @@
 package de.cuzim1tigaaa.easter.commands;
 
 import de.cuzim1tigaaa.easter.EasterEggs;
-import de.cuzim1tigaaa.easter.listeners.EasterEvents;
-import de.cuzim1tigaaa.easter.utils.egg.Category;
-import de.cuzim1tigaaa.easter.utils.egg.EggUtils;
-import de.cuzim1tigaaa.guimanager.CustomHead;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Skull;
+import de.cuzim1tigaaa.easter.commands.sub.Place;
+import de.cuzim1tigaaa.easter.commands.sub.Remove;
+import de.cuzim1tigaaa.easter.files.Messages;
+import de.cuzim1tigaaa.easter.files.Paths;
+import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.profile.PlayerProfile;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EasterCommand implements CommandExecutor, TabCompleter {
 
+	private final EasterEggs plugin;
+
+	@Getter
+	private final List<SubCommand> subCommands = new ArrayList<>();
+
 	public EasterCommand(EasterEggs plugin) {
+		this.plugin = plugin;
 		plugin.getCommand("easter").setExecutor(this);
+
+		subCommands.add(new Place());
+		subCommands.add(new Remove());
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(!(sender instanceof Player player)) {
-
+			Messages.getMessages().send(sender, Paths.MESSAGES_SENDER);
 			return true;
 		}
 
-		if(args.length == 0) {
+		if(args.length > 0) {
+			getSubCommands().stream().filter(subCommand -> {
+				if(args[0].equalsIgnoreCase(subCommand.getCommand()))
+					return true;
 
+				if(subCommand.getAliases().length == 0)
+					return false;
+
+				return List.of(subCommand.getAliases()).contains(args[0]);
+			}).findFirst().ifPresentOrElse(subCommand ->
+					subCommand.execute(player, args), () -> player.sendMessage("/easter help"));
+		}
+		if(args.length < 1) {
+			sender.sendMessage(getHelpMessage());
 			return true;
 		}
-
-		switch(args[0].toLowerCase()) {
-			case "place" -> {
-				String categoryId = args[1];
-				placeEasterEgg(player, categoryId);
-			}
-			case "remove" -> {
-				EasterEvents.getRemovedEggs().add(player.getUniqueId());
-				player.sendMessage("§aYou are now in remove mode. Right click an egg to remove it.");
-			}
-			case "help" -> {
-
-			}
-		}
-
 		return true;
-	}
-
-	private void placeEasterEgg(Player player, String categoryId) {
-		Category category = EggUtils.getCategoryById(categoryId);
-		if(category == null) {
-			player.sendMessage(ChatColor.RED + "Category not found");
-			return;
-		}
-
-		Block block = player.getTargetBlockExact(6);
-		if(block == null || block.getType().isAir()) {
-			player.sendMessage("§cYou are not looking at a block.");
-			return;
-		}
-
-		PlayerProfile profile;
-		if(category.getCustomHead() == null || (profile = CustomHead.getHead(category.getCustomHead())) == null) {
-			player.sendMessage("The head from category " + category.getName() + " does not exist.");
-			return;
-		}
-
-		block.setType(Material.PLAYER_HEAD);
-		Skull skull = (Skull) block.getState();
-		skull.setOwnerProfile(profile);
-		skull.update(true);
 	}
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+		List<String> tab = new ArrayList<>();
 		if(args.length == 1)
-			return List.of("place", "remove", "help");
-		if(args.length == 2 && args[0].equalsIgnoreCase("place"))
-			return EggUtils.getCategories().stream().map(Category::getName).collect(Collectors.toList());
-		return List.of();
+			return getSubCommands().stream().map(SubCommand::getCommand).toList();
+
+		if(args.length > 1) {
+			getSubCommands().stream().filter(subCommand -> {
+				if(subCommand.getCommand().equalsIgnoreCase(args[0]))
+					return true;
+
+				if(!sender.hasPermission(subCommand.getPermission()))
+					return false;
+
+				if(subCommand.getAliases().length == 0)
+					return false;
+
+				return List.of(subCommand.getAliases()).contains(args[0]);
+			}).forEach(subCommand -> tab.addAll(subCommand.onTabComplete(sender, args)));
+		}
+		return tab;
+	}
+
+	public String getHelpMessage() {
+		return Messages.format("""
+				&a&lEasterEggs v%s
+				&7&o© 2022&7; CuzIm1Tigaaa
+				&7All rights reserved
+				""", plugin.getDescription().getVersion());
 	}
 }
