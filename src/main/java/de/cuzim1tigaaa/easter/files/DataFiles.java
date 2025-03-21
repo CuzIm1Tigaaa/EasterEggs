@@ -77,7 +77,7 @@ public class DataFiles {
 		EggUtils.getEggs().clear();
 		File file = new File(plugin.getDataFolder(), "categories.yml");
 		if(!file.exists()) {
-			file.mkdir();
+			file.getParentFile().mkdir();
 			plugin.saveResource("categories.yml", false);
 		}
 

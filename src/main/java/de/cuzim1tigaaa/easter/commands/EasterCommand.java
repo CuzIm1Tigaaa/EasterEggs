@@ -1,8 +1,8 @@
 package de.cuzim1tigaaa.easter.commands;
 
+import de.cuzim1tigaaa.colorlib.ColorLib;
 import de.cuzim1tigaaa.easter.EasterEggs;
-import de.cuzim1tigaaa.easter.commands.sub.Place;
-import de.cuzim1tigaaa.easter.commands.sub.Remove;
+import de.cuzim1tigaaa.easter.commands.sub.*;
 import de.cuzim1tigaaa.easter.files.Messages;
 import de.cuzim1tigaaa.easter.files.Paths;
 import lombok.Getter;
@@ -26,8 +26,11 @@ public class EasterCommand implements CommandExecutor, TabCompleter {
 		this.plugin = plugin;
 		plugin.getCommand("easter").setExecutor(this);
 
+		subCommands.add(new Help(this));
 		subCommands.add(new Place());
+		subCommands.add(new Reload(plugin));
 		subCommands.add(new Remove());
+		subCommands.add(new Test());
 	}
 
 	@Override
@@ -67,7 +70,8 @@ public class EasterCommand implements CommandExecutor, TabCompleter {
 				if(subCommand.getCommand().equalsIgnoreCase(args[0]))
 					return true;
 
-				if(!sender.hasPermission(subCommand.getPermission()))
+				if(subCommand.getPermission() != null &&
+						!sender.hasPermission(subCommand.getPermission()))
 					return false;
 
 				if(subCommand.getAliases().length == 0)
@@ -80,8 +84,8 @@ public class EasterCommand implements CommandExecutor, TabCompleter {
 	}
 
 	public String getHelpMessage() {
-		return Messages.format("""
-				&a&lEasterEggs v%s
+		return ColorLib.format("""
+				&l#CEF4F8Ea#D1CCEBst#FED3D9er#FDF0D7Eg#C5EBD5gs &fv%s
 				&7&o© 2022&7; CuzIm1Tigaaa
 				&7All rights reserved
 				""", plugin.getDescription().getVersion());

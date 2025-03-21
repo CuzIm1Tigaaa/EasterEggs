@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>JumpNRun</name>
     <groupId>de.cuzim1tigaaa.easter</groupId>
     <artifactId>EasterEggs</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -33,7 +32,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <version>1.21.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -41,6 +40,13 @@
             <groupId>de.cuzim1tigaaa.guimanager</groupId>
             <artifactId>guimanager</artifactId>
             <version>5.0.18</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.cuzim1tigaaa.colorlib</groupId>
+            <artifactId>colorlib</artifactId>
+            <version>2.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -60,6 +66,36 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludeDefaults>false</excludeDefaults>
+                                    <includes>
+                                        <include>de.cuzim1tigaaa.easter</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

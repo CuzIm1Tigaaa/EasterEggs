@@ -1,7 +1,9 @@
 package de.cuzim1tigaaa.easter.files;
 
+import de.cuzim1tigaaa.colorlib.ColorLib;
+import de.cuzim1tigaaa.colorlib.gradients.Gradient;
+import de.cuzim1tigaaa.colorlib.gradients.LinearGradient;
 import de.cuzim1tigaaa.easter.EasterEggs;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,11 +11,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public class Messages {
 
 	private static final EasterEggs PLUGIN = EasterEggs.getPlugin(EasterEggs.class);
 	private static Messages messages;
+
+	private final Set<Gradient> gradients = Set.of(
+			new LinearGradient()
+	);
 
 	public static Messages getMessages() {
 		if(messages == null)
@@ -29,7 +36,7 @@ public class Messages {
 			PLUGIN.getLogger().warning("Error: Path '" + path + "' does not exist!");
 			return;
 		}
-		sender.sendMessage(format(message));
+		sender.sendMessage(message);
 	}
 
 	public String get(String path, Object... replace) {
@@ -48,7 +55,7 @@ public class Messages {
 			PLUGIN.getLogger().warning("Error: Path '" + path + "' does not exist!");
 			return null;
 		}
-		return format(string);
+		return ColorLib.format(string, replace);
 	}
 
 	public void loadMessages(EasterEggs plugin) throws IOException {
@@ -70,13 +77,6 @@ public class Messages {
 	}
 	private void set(String path, String message) {
 		messagesFile.set(path, messagesFile.getString(path, message));
-	}
-
-	public static String format(String s) {
-		return ChatColor.translateAlternateColorCodes('&', s);
-	}
-	public static String format(String s, Object... obj) {
-		return ChatColor.translateAlternateColorCodes('&', String.format(s, obj));
 	}
 
 	public static String capitalizeFully(String s) {
