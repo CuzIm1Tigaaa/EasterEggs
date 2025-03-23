@@ -1,13 +1,11 @@
 package de.cuzim1tigaaa.easter.commands.sub;
 
 import de.cuzim1tigaaa.easter.commands.SubCommand;
-import de.cuzim1tigaaa.easter.utils.egg.Category;
-import de.cuzim1tigaaa.easter.utils.egg.EggUtils;
+import de.cuzim1tigaaa.easter.utils.egg.*;
 import de.cuzim1tigaaa.guimanager.CustomHead;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Skull;
+import org.bukkit.block.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.profile.PlayerProfile;
@@ -54,6 +52,7 @@ public class Place extends SubCommand {
 			player.sendMessage("§cYou are not looking at a block.");
 			return;
 		}
+		block = block.getRelative(BlockFace.UP);
 
 		PlayerProfile profile = null;
 		if(category.getCustomHead() == null || (profile = CustomHead.getHead(category.getCustomHead())) == null)
@@ -64,6 +63,7 @@ public class Place extends SubCommand {
 		if(profile != null)
 			skull.setOwnerProfile(profile);
 		skull.update(true);
+		EggUtils.getEggs().add(new Egg(block.getLocation(), category.getId()));
 	}
 
 	@Override

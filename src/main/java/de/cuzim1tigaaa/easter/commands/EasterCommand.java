@@ -26,6 +26,7 @@ public class EasterCommand implements CommandExecutor, TabCompleter {
 		this.plugin = plugin;
 		plugin.getCommand("easter").setExecutor(this);
 
+		subCommands.add(new Categories());
 		subCommands.add(new Help(this));
 		subCommands.add(new Place());
 		subCommands.add(new Reload(plugin));

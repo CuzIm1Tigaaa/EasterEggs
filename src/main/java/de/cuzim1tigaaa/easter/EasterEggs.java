@@ -18,15 +18,13 @@ public class EasterEggs extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		this.dataFiles = new DataFiles(this);
 		reload();
+		this.dataFiles.loadEasterEggs();
 
 		new EasterCommand(this);
 		new EasterEvents(this);
 		new GuiEvents(this);
-
-		this.dataFiles = new DataFiles(this);
-		this.dataFiles.loadCategories();
-		this.dataFiles.loadEasterEggs();
 
 		this.highlight = new Highlight(this);
 		this.highlight.startHighlight();
@@ -39,6 +37,7 @@ public class EasterEggs extends JavaPlugin {
 	}
 
 	public void reload() {
+		this.dataFiles.loadCategories();
 		try {
 			Messages.getMessages().loadMessages(this);
 		} catch(IOException e) {

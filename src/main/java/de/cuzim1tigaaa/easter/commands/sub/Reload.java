@@ -1,13 +1,9 @@
 package de.cuzim1tigaaa.easter.commands.sub;
 
 import de.cuzim1tigaaa.easter.EasterEggs;
-import de.cuzim1tigaaa.easter.commands.EasterCommand;
 import de.cuzim1tigaaa.easter.commands.SubCommand;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import de.cuzim1tigaaa.easter.files.Messages;
+import de.cuzim1tigaaa.easter.files.Paths;
 import org.bukkit.entity.Player;
 
 public class Reload extends SubCommand {
@@ -29,6 +25,11 @@ public class Reload extends SubCommand {
 	}
 
 	@Override
+	public String getPermission() {
+		return "easter.reload";
+	}
+
+	@Override
 	public String getDescription() {
 		return "Lade die Plugin-Dateien neu";
 	}
@@ -43,6 +44,8 @@ public class Reload extends SubCommand {
 		if(!player.hasPermission(this.getPermission()))
 			return;
 
-
+		long start = System.currentTimeMillis();
+		plugin.reload();
+		Messages.getMessages().send(player, Paths.MESSAGES_RELOAD, "TIME", System.currentTimeMillis() - start);
 	}
 }

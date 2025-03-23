@@ -7,11 +7,12 @@ import de.cuzim1tigaaa.guimanager.CustomHead;
 import lombok.Getter;
 import org.bukkit.Material;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
-public class Category {
+public class Category implements Comparable<Category> {
 
 	private final String id;
 	private final String name;
@@ -44,5 +45,12 @@ public class Category {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public int compareTo(Category o) {
+		return Comparator.comparing(Category::getId)
+				.thenComparing(Category::getName)
+				.compare(this, o);
 	}
 }

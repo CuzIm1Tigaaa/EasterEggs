@@ -74,7 +74,7 @@ public class DataFiles {
 	}
 
 	public void loadCategories() {
-		EggUtils.getEggs().clear();
+		EggUtils.getCategories().clear();
 		File file = new File(plugin.getDataFolder(), "categories.yml");
 		if(!file.exists()) {
 			file.getParentFile().mkdir();
@@ -83,11 +83,14 @@ public class DataFiles {
 
 		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 		ConfigurationSection categories = config.getConfigurationSection("categories");
+		if(categories == null)
+			return;
+
 		for(String cat : categories.getKeys(false)) {
-			String id = categories.getString(cat + ".id");
 			String name = categories.getString(cat + ".name");
-			String customHeadUrl = categories.getString(cat + ".customHeadUrl");
-			RewardType rewardType = (RewardType) getEnumByName(cat + ".type", RewardType.class, RewardType.TALER);
+			String customHeadUrl = categories.getString(cat + ".headURL");
+			String reward = categories.getString(cat + ".type");
+			RewardType rewardType = (RewardType) getEnumByName(reward, RewardType.class, RewardType.TALER);
 			int min = categories.getInt(cat + ".min");
 			int max = categories.getInt(cat + ".max");
 
@@ -99,7 +102,7 @@ public class DataFiles {
 						materials.add(material);
 				}
 			}
-			Category category = new Category(id, name, customHeadUrl, rewardType, min, max, materials);
+			Category category = new Category(cat, name, customHeadUrl, rewardType, min, max, materials);
 			EggUtils.getCategories().add(category);
 		}
 	}

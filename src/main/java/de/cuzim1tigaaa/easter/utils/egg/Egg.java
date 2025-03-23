@@ -10,11 +10,19 @@ public class Egg {
 
 	private final UUID uniqueId;
 	private final Location location;
-	private final Category category;
+	private final String categoryId;
 
-	public Egg(UUID uniqueId, Location location, Category category) {
+	public Egg(UUID uniqueId, Location location, String categoryId) {
 		this.uniqueId = uniqueId;
 		this.location = location;
-		this.category = category;
+		this.categoryId = categoryId;
+	}
+
+	public Egg(Location location, String categoryId) {
+		this(UUID.randomUUID(), location, categoryId);
+	}
+
+	public Category getCategory() {
+		return EggUtils.getCategoryById(categoryId);
 	}
 }

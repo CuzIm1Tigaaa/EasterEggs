@@ -16,10 +16,8 @@ public class LocationAdapter implements JsonSerializer<Location>, JsonDeserializ
 		double x = jsonObject.get("x").getAsDouble();
 		double y = jsonObject.get("y").getAsDouble();
 		double z = jsonObject.get("z").getAsDouble();
-		float yaw = jsonObject.get("yaw").getAsFloat();
-		float pitch = jsonObject.get("pitch").getAsFloat();
 
-		return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+		return new Location(Bukkit.getWorld(world), x, y, z);
 	}
 
 	@Override
@@ -29,8 +27,6 @@ public class LocationAdapter implements JsonSerializer<Location>, JsonDeserializ
 		jsonObject.addProperty("x", src.getX());
 		jsonObject.addProperty("y", src.getY());
 		jsonObject.addProperty("z", src.getZ());
-		jsonObject.addProperty("yaw", src.getYaw());
-		jsonObject.addProperty("pitch", src.getPitch());
 		return jsonObject;
 	}
 }
