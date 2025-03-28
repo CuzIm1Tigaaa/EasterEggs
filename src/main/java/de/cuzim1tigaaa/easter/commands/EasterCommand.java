@@ -46,9 +46,6 @@ public class EasterCommand implements CommandExecutor, TabCompleter {
 				if(args[0].equalsIgnoreCase(subCommand.getCommand()))
 					return true;
 
-				if(subCommand.getAliases().length == 0)
-					return false;
-
 				return List.of(subCommand.getAliases()).contains(args[0]);
 			}).findFirst().ifPresentOrElse(subCommand ->
 					subCommand.execute(player, args), () -> player.sendMessage("/easter help"));
@@ -75,9 +72,6 @@ public class EasterCommand implements CommandExecutor, TabCompleter {
 						!sender.hasPermission(subCommand.getPermission()))
 					return false;
 
-				if(subCommand.getAliases().length == 0)
-					return false;
-
 				return List.of(subCommand.getAliases()).contains(args[0]);
 			}).forEach(subCommand -> tab.addAll(subCommand.onTabComplete(sender, args)));
 		}
@@ -87,7 +81,7 @@ public class EasterCommand implements CommandExecutor, TabCompleter {
 	public String getHelpMessage() {
 		return ColorLib.format("""
 				&l#CEF4F8Ea#D1CCEBst#FED3D9er#FDF0D7Eg#C5EBD5gs &fv%s
-				&7&o© 2022&7; CuzIm1Tigaaa
+				&7by CuzIm1Tigaaa; &7&o© 2025
 				&7All rights reserved
 				""", plugin.getDescription().getVersion());
 	}

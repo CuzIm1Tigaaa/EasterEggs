@@ -1,6 +1,8 @@
 package de.cuzim1tigaaa.easter.commands.sub;
 
 import de.cuzim1tigaaa.easter.commands.SubCommand;
+import de.cuzim1tigaaa.easter.files.Messages;
+import de.cuzim1tigaaa.easter.files.Paths;
 import de.cuzim1tigaaa.easter.utils.egg.*;
 import de.cuzim1tigaaa.guimanager.CustomHead;
 import net.md_5.bungee.api.ChatColor;
@@ -20,7 +22,7 @@ public class Place extends SubCommand {
 
 	@Override
 	public String getPermission() {
-		return "";
+		return Paths.PERMISSIONS_PLACE;
 	}
 
 	@Override
@@ -43,16 +45,23 @@ public class Place extends SubCommand {
 
 		Category category = EggUtils.getCategoryById(args[1]);
 		if(category == null) {
+			Messages.getMessages().send(player, Paths.COMMANDS_PLACE_CATEGORY_NULL, "CATEGORY", args[1]);
 			player.sendMessage(ChatColor.RED + "Category not found");
 			return;
 		}
 
 		Block block = player.getTargetBlockExact(6);
 		if(block == null || block.getType().isAir()) {
+			Messages.getMessages().send(player, Paths.COMMANDS_PLACE_AIR);
 			player.sendMessage("§cYou are not looking at a block.");
 			return;
 		}
+
 		block = block.getRelative(BlockFace.UP);
+		if(EggUtils.getEggByLocation(block.getLocation()) != null) {
+			Messages.getMessages().send(player, Paths.COMMANDS_PLACE_OCCUPIED);
+			return;
+		}
 
 		PlayerProfile profile = null;
 		if(category.getCustomHead() == null || (profile = CustomHead.getHead(category.getCustomHead())) == null)

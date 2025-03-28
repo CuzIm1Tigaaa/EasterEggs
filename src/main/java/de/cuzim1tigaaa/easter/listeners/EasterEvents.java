@@ -1,6 +1,8 @@
 package de.cuzim1tigaaa.easter.listeners;
 
 import de.cuzim1tigaaa.easter.EasterEggs;
+import de.cuzim1tigaaa.easter.files.Messages;
+import de.cuzim1tigaaa.easter.files.Paths;
 import de.cuzim1tigaaa.easter.utils.egg.Egg;
 import de.cuzim1tigaaa.easter.utils.egg.EggUtils;
 import de.cuzim1tigaaa.easter.utils.progress.PlayerProgress;
@@ -14,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashSet;
@@ -41,10 +44,13 @@ public class EasterEvents implements Listener {
 			return;
 
 		UUID uuid = player.getUniqueId();
+		Messages messages = Messages.getMessages();
+
 		if(removeEggs.contains(uuid)) {
 			EggUtils.getEggs().remove(egg);
 			removeEggs.remove(uuid);
 
+			messages.send(player, Paths.COMMANDS_REMOVE_EGG);
 			player.sendMessage("Egg removed");
 			player.sendMessage("Egg count: " + EggUtils.getEggs().size());
 			player.sendMessage("Category count: " + EggUtils.getEggsByCategory(egg.getCategory()).size());
@@ -59,7 +65,7 @@ public class EasterEvents implements Listener {
 
 		if(ProgressUtils.hasPlayerProgress(progress, egg)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-					new TextComponent("You already found this egg"));
+					new TextComponent(messages.get(Paths.MESSAGES_EGG_ALREADY)));
 			return;
 		}
 
@@ -72,5 +78,18 @@ public class EasterEvents implements Listener {
 		player.sendMessage(String.format("%d / %d Eier der Kategorie %s gefunden",
 				ProgressUtils.getProgress(progress),
 				EggUtils.getEggs().size(), egg.getCategory().getName()));
+	}
+
+	@EventHandler
+	public void breakEgg(BlockBreakEvent event) {
+		Block block = event.getBlock();
+		if(block.getType() != Material.PLAYER_HEAD)
+			return;
+
+		Egg egg = EggUtils.getEggByLocation(block.getLocation());
+		if(egg == null)
+			return;
+
+		event.setCancelled(true);
 	}
 }

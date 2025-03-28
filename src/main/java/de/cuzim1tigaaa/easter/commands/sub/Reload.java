@@ -26,7 +26,7 @@ public class Reload extends SubCommand {
 
 	@Override
 	public String getPermission() {
-		return "easter.reload";
+		return Paths.PERMISSIONS_RELOAD;
 	}
 
 	@Override

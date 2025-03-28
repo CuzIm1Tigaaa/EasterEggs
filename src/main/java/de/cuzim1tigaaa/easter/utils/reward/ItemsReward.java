@@ -1,5 +1,6 @@
 package de.cuzim1tigaaa.easter.utils.reward;
 
+import de.cuzim1tigaaa.colorlib.ColorLib;
 import de.cuzim1tigaaa.easter.files.Messages;
 import de.cuzim1tigaaa.easter.utils.RewardType;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class ItemsReward extends Reward {
 	}
 
 	public String getMessage() {
-		return String.format("Du hast %d %s gefunden!", amount,
-				Messages.capitalizeFully(material.name()));
+		return ColorLib.format("&7Du hast %dx %s gefunden!",
+				amount, Messages.capitalizeFully(material.name()));
 	}
 }

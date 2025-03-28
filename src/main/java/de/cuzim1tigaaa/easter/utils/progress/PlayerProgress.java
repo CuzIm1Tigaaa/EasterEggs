@@ -13,15 +13,12 @@ import java.util.UUID;
 public class PlayerProgress {
 
 	private final UUID uuid;
+	private final Set<UUID> foundEggs;
 	private final Set<Progress> progress;
-
-	public PlayerProgress(UUID uuid, Set<Progress> progress) {
-		this.uuid = uuid;
-		this.progress = progress;
-	}
 
 	public PlayerProgress(UUID uuid) {
 		this.uuid = uuid;
+		this.foundEggs = new HashSet<>();
 		this.progress = new HashSet<>();
 	}
 

@@ -1,6 +1,7 @@
 package de.cuzim1tigaaa.easter.commands.sub;
 
 import de.cuzim1tigaaa.easter.commands.SubCommand;
+import de.cuzim1tigaaa.easter.files.Paths;
 import de.cuzim1tigaaa.easter.gui.CategoryGUI;
 import de.cuzim1tigaaa.easter.utils.egg.Category;
 import de.cuzim1tigaaa.easter.utils.egg.EggUtils;
@@ -18,7 +19,7 @@ public class Categories extends SubCommand {
 
 	@Override
 	public String getPermission() {
-		return "";
+		return Paths.PERMISSIONS_CATEGORIES;
 	}
 
 	@Override
