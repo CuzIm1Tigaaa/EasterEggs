@@ -5,7 +5,7 @@ import de.cuzim1tigaaa.easter.utils.reward.ItemsReward;
 import de.cuzim1tigaaa.easter.utils.reward.Reward;
 import de.cuzim1tigaaa.guimanager.CustomHead;
 import lombok.Getter;
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,9 +20,9 @@ public class Category implements Comparable<Category> {
 	private final transient CustomHead customHead;
 	private final RewardType rewardType;
 	private final int min, max;
-	private final List<Material> materials;
+	private final List<ItemStack> items;
 
-	public Category(String id, String name, String customHeadUrl, RewardType rewardType, int min, int max, List<Material> materials) {
+	public Category(String id, String name, String customHeadUrl, RewardType rewardType, int min, int max, List<ItemStack> items) {
 		this.id = id;
 		this.name = name;
 		this.customHeadUrl = customHeadUrl;
@@ -30,7 +30,7 @@ public class Category implements Comparable<Category> {
 		this.rewardType = rewardType;
 		this.min = min;
 		this.max = max;
-		this.materials = materials;
+		this.items = items;
 	}
 
 	public Reward createReward() {
@@ -40,7 +40,7 @@ public class Category implements Comparable<Category> {
 				return new Reward(rewardType, random.nextInt(min, max + 1));
 			}
 			case ITEMS -> {
-				return new ItemsReward(materials.get(random.nextInt(materials.size())),
+				return new ItemsReward(items.get(random.nextInt(items.size())),
 						random.nextInt(min, max + 1));
 			}
 		}

@@ -1,26 +1,22 @@
-package de.cuzim1tigaaa.easter.files;
+package de.cuzim1tigaaa.easter.files.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import de.cuzim1tigaaa.easter.EasterEggs;
 import de.cuzim1tigaaa.easter.utils.RewardType;
-import de.cuzim1tigaaa.easter.utils.egg.Category;
-import de.cuzim1tigaaa.easter.utils.egg.Egg;
-import de.cuzim1tigaaa.easter.utils.egg.EggUtils;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import de.cuzim1tigaaa.easter.utils.egg.*;
+import de.cuzim1tigaaa.guimanager.ItemUtils;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
 
 public class DataFiles {
@@ -66,6 +62,7 @@ public class DataFiles {
 				if(eggs == null || eggs.length == 0)
 					return;
 				EggUtils.getEggs().addAll(List.of(eggs));
+				plugin.getLogger().log(Level.INFO, "Loaded " + eggs.length + " easter eggs");
 				reader.close();
 			}
 		}catch(IOException exception) {
@@ -90,25 +87,54 @@ public class DataFiles {
 			String name = categories.getString(cat + ".name");
 			String customHeadUrl = categories.getString(cat + ".headURL");
 			String reward = categories.getString(cat + ".type");
-			RewardType rewardType = (RewardType) getEnumByName(reward, RewardType.class, RewardType.TALER);
+			RewardType rewardType = (RewardType) EasterEggs.getEnumByName(reward, RewardType.class, RewardType.TALER);
 			int min = categories.getInt(cat + ".min");
 			int max = categories.getInt(cat + ".max");
 
-			List<Material> materials = new ArrayList<>();
+			List<ItemStack> items = new ArrayList<>();
 			if(rewardType == RewardType.ITEMS) {
-				for(String item : categories.getStringList(cat + ".items")) {
+				for(String item : categories.getConfigurationSection(cat + ".items").getKeys(false)) {
 					Material material = Material.getMaterial(item);
-					if(material != null)
-						materials.add(material);
+					if(material != null) {
+						ItemStack itemStack = new ItemStack(material);
+						ItemMeta meta = itemStack.getItemMeta();
+
+						String displayName = categories.getString(cat + ".items." + item + ".name");
+						if(displayName != null)
+							meta.setDisplayName(displayName);
+
+						List<String> lore = categories.getStringList(cat + ".items." + item + ".lore");
+						if(!lore.isEmpty())
+							meta.setLore(lore);
+
+						if(categories.getBoolean(cat + ".items." + item + ".enchanted")) {
+							itemStack.setItemMeta(meta);
+							itemStack = ItemUtils.addEnchantments(itemStack);
+							items.add(itemStack);
+							continue;
+						}
+
+						List<String> enchantments = categories.getStringList(cat + ".items." + item + ".enchantments");
+						Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
+						for(String enchantment : enchantments) {
+							String[] split = enchantment.split(":");
+							if(split.length == 2) {
+								Enchantment ench = Registry.ENCHANTMENT.get(NamespacedKey.minecraft(split[0].toLowerCase()));
+								if(ench != null) {
+									int level = Integer.parseInt(split[1]);
+									if(level > 0)
+										enchantmentMap.put(ench, level);
+								}
+							}
+						}
+						itemStack.setItemMeta(meta);
+						itemStack = ItemUtils.addEnchantments(itemStack, enchantmentMap, false);
+						items.add(itemStack);
+					}
 				}
 			}
-			Category category = new Category(cat, name, customHeadUrl, rewardType, min, max, materials);
+			Category category = new Category(cat, name, customHeadUrl, rewardType, min, max, items);
 			EggUtils.getCategories().add(category);
 		}
-	}
-
-	public <T extends Enum<T>> Enum<T> getEnumByName(String type, Class<T> clazz, T def) {
-		return Arrays.stream(clazz.getEnumConstants()).filter(trackType ->
-				trackType.name().equalsIgnoreCase(type)).findFirst().orElse(def);
 	}
 }

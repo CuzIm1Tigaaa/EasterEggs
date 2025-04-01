@@ -8,3 +8,33 @@ commands:
     aliases: [ easter ]
     description: Command for managing easter eggs
     usage: /eastereggs help
+permissions:
+  easter.*:
+    description: Permission for all easter egg commands
+    default: op
+    children:
+        easter.command.*:
+            description: Permission for admin commands
+            default: op
+            children:
+              easter.commands.categories:
+                description: List all categories
+                default: false
+              easter.commands.generate:
+                description: Generate commands for rewards as txt file
+                default: false
+              easter.commands.place:
+                description: Place an easter egg
+                default: false
+              easter.commands.progress:
+                description: Show progress of a players
+                default: false
+              easter.commands.reload:
+                description: Reload the plugin
+                default: false
+              easter.commands.remove:
+                description: Remove an easter egg
+                default: false
+              easter.commands.rewards:
+                description: List all current rewards a player has
+                default: false

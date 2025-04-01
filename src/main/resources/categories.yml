@@ -17,14 +17,32 @@ categories:
     type: 'ITEMS'
     min: 1
     max: 10
-    materials:
-      - 'DIAMOND'
-      - 'GOLD_INGOT'
-      - 'IRON_INGOT'
-      - 'EMERALD'
-      - 'LAPIS_LAZULI'
-      - 'REDSTONE'
-      - 'QUARTZ'
-      - 'COAL'
-      - 'NETHERITE_INGOT'
-      - 'AMETHYST_SHARD'
+    items:
+      DIAMOND:
+        name: '&bDiamant'
+        lore:
+          - '&7Diamanten sind sehr wertvoll'
+          - '&7und können für viele Dinge verwendet werden.'
+        enchanted: true
+        enchantments:
+          - 'UNBREAKING:1'
+          - 'FORTUNE:1'
+      # The section must not be empty! Otherwise, the item will not be recognized
+      GOLD_INGOT:
+        enchanted: false
+      IRON_INGOT:
+        enchanted: false
+      EMERALD:
+        enchanted: false
+      LAPIS_LAZULI:
+        enchanted: false
+      REDSTONE:
+        enchanted: false
+      QUARTZ:
+        enchanted: false
+      COAL:
+        enchanted: false
+      NETHERITE_INGOT:
+        enchanted: false
+      AMETHYST_SHARD:
+        enchanted: false

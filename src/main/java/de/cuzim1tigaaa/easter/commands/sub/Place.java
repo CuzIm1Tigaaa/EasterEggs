@@ -6,8 +6,10 @@ import de.cuzim1tigaaa.easter.files.Paths;
 import de.cuzim1tigaaa.easter.utils.egg.*;
 import de.cuzim1tigaaa.guimanager.CustomHead;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.profile.PlayerProfile;
@@ -32,13 +34,15 @@ public class Place extends SubCommand {
 
 	@Override
 	public String getUsage() {
-		return super.getUsage() + "place <category>";
+		return super.getUsage() + " <category>";
 	}
 
 	@Override
 	public void execute(Player player, String[] args) {
-		if(!player.hasPermission(this.getPermission()))
+		if(!player.hasPermission(this.getPermission())) {
+			Messages.getMessages().send(player, Paths.MESSAGES_PERMISSION);
 			return;
+		}
 
 		if(args.length < 2)
 			return;
@@ -72,7 +76,24 @@ public class Place extends SubCommand {
 		if(profile != null)
 			skull.setOwnerProfile(profile);
 		skull.update(true);
+
+		Rotatable rotatable = (Rotatable) skull.getBlockData();
+		rotatable.setRotation(updateSkullRotation(skull, player));
+		block.setBlockData(rotatable);
+
 		EggUtils.getEggs().add(new Egg(block.getLocation(), category.getId()));
+	}
+
+	private BlockFace updateSkullRotation(Skull skull, Player player) {
+		Location skullLocation = skull.getLocation();
+		Location playerLocation = player.getLocation();
+
+		double dx = playerLocation.getX() - skullLocation.getX();
+		double dz = playerLocation.getZ() - skullLocation.getZ();
+		float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+
+		int rotation = Math.round(yaw / 22.5f) & 15; // Rotation in 16 Stufen (0-15)
+		return BlockFace.values()[rotation];
 	}
 
 	@Override

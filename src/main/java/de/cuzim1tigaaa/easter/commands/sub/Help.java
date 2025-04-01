@@ -28,11 +28,6 @@ public class Help extends SubCommand {
 	}
 
 	@Override
-	public String getUsage() {
-		return super.getUsage() + "help";
-	}
-
-	@Override
 	public void execute(Player player, String[] args) {
 		ComponentBuilder c = new ComponentBuilder("Liste aller Befehle:").color(ChatColor.GRAY).append("\n");
 		for(SubCommand sub : command.getSubCommands()) {

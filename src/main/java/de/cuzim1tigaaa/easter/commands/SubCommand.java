@@ -9,7 +9,7 @@ import java.util.List;
 public class SubCommand {
 
 	public String getCommand() {
-		return null;
+		return "";
 	}
 
 	public String[] getAliases() {
@@ -25,7 +25,7 @@ public class SubCommand {
 	}
 
 	public String getUsage() {
-		return "/easter ";
+		return "/easter " + getCommand();
 	}
 
 	public void execute(Player player, String[] args) {

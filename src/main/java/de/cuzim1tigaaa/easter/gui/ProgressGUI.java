@@ -1,16 +1,16 @@
 package de.cuzim1tigaaa.easter.gui;
 
 import de.cuzim1tigaaa.colorlib.ColorLib;
-import de.cuzim1tigaaa.colorlib.gradients.SingleColor;
+import de.cuzim1tigaaa.easter.EasterEggs;
 import de.cuzim1tigaaa.easter.files.Messages;
 import de.cuzim1tigaaa.easter.files.Paths;
-import de.cuzim1tigaaa.easter.utils.RewardType;
 import de.cuzim1tigaaa.easter.utils.egg.Category;
 import de.cuzim1tigaaa.easter.utils.egg.EggUtils;
-import de.cuzim1tigaaa.guimanager.GuiUtils;
-import de.cuzim1tigaaa.guimanager.ItemUtils;
+import de.cuzim1tigaaa.easter.utils.progress.PlayerProgress;
+import de.cuzim1tigaaa.guimanager.*;
 import de.cuzim1tigaaa.guimanager.gui.MultiPageGUI;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -18,15 +18,25 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryGUI extends MultiPageGUI<Category> {
+public class ProgressGUI extends MultiPageGUI<Category> {
 
-	public CategoryGUI(int page) {
+	private final EasterEggs plugin;
+	private OfflinePlayer target;
+	private PlayerProgress progress;
+
+	public ProgressGUI(EasterEggs plugin, OfflinePlayer target, int page) {
 		super(27, page, 7);
+		this.plugin = plugin;
+		this.target = target;
 	}
 
 	@Override
 	public Inventory getInventory() {
-		return Bukkit.createInventory(null, getSize(), ColorLib.format("&e&lKategorie Übersicht", new SingleColor()));
+		String title = "&e&lFortschritt";
+		if(target != null)
+			title += " von &c" + target.getName();
+
+		return Bukkit.createInventory(null, getSize(), ColorLib.format(title));
 	}
 
 	@Override
@@ -37,6 +47,10 @@ public class CategoryGUI extends MultiPageGUI<Category> {
 			return;
 		}
 
+		if(target == null)
+			target = player;
+
+		this.progress = plugin.getProgressUtils().getPlayerProgress(target.getUniqueId());
 		categories.sort(Category::compareTo);
 		setItems(categories);
 		super.open(player);
@@ -55,6 +69,12 @@ public class CategoryGUI extends MultiPageGUI<Category> {
 
 		GuiUtils.setNavigationItems(gui, currentPage > 1, false, currentPage != maxPage);
 
+		gui.setItem(4, ItemUtils.getCustomHead(CustomHead.BLACK_EXCLAMATION,
+				"&c&lFortschritt",
+				"",
+				String.format("&7Du hast &e%d/%d &7Oster-Eiern gefunden",
+						progress.getTotalProgress(), EggUtils.getEggs().size())));
+
 		int slot = 10;
 		for(; index < this.getItems().size() && slot < gui.getSize() - 9; index++) {
 			Category category = this.getItems().get(index);
@@ -62,21 +82,9 @@ public class CategoryGUI extends MultiPageGUI<Category> {
 
 			List<String> lore = new ArrayList<>();
 			lore.add("");
-			lore.add("&7Diese Kategorie enthält &e" + Messages.capitalizeFully(category.getRewardType().name()) + " &7als Belohnung.");
-			lore.add("&7Es wurden bereits &e" + eggs + " &7Eier gesetzt.");
-			lore.add("&7Mindestanzahl: &e" + category.getMin());
-			lore.add("&7Höchstanzahl: &e" + category.getMax());
-
-			if(category.getRewardType().equals(RewardType.ITEMS)) {
-				lore.add("");
-				lore.add("&7Materialien:");
-				for(ItemStack item : category.getItems()) {
-					String name = item.getItemMeta().getDisplayName();
-					if(name.isEmpty())
-						name = item.getType().name();
-					lore.add("&8- &e" + name);
-				}
-			}
+			lore.add(String.format("&7Du hast &e%d/%d &7Oster-Eiern",
+					progress.getProgressByCategory(category.getId()) ,eggs));
+			lore.add("&7aus dieser Kategorie gefunden");
 
 			ItemStack item = ItemUtils.getCustomHead(category.getCustomHead(),
 					category.getName(),

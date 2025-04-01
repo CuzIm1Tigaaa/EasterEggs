@@ -9,13 +9,11 @@ import java.util.UUID;
 @Getter
 public class Progress {
 
-	private final UUID uuid;
 	private final UUID eggId;
 	private final Timestamp timestamp;
 	private final Reward reward;
 
 	public Progress(UUID eggId, Timestamp timestamp, Reward reward) {
-		this.uuid = null;
 		this.eggId = eggId;
 		this.timestamp = timestamp;
 		this.reward = reward;

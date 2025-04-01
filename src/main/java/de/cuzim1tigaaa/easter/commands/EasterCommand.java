@@ -5,6 +5,7 @@ import de.cuzim1tigaaa.easter.EasterEggs;
 import de.cuzim1tigaaa.easter.commands.sub.*;
 import de.cuzim1tigaaa.easter.files.Messages;
 import de.cuzim1tigaaa.easter.files.Paths;
+import de.cuzim1tigaaa.easter.files.data.CommandFile;
 import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,20 +19,26 @@ import java.util.List;
 public class EasterCommand implements CommandExecutor, TabCompleter {
 
 	private final EasterEggs plugin;
+	@Getter
+	private final CommandFile commandFile;
 
 	@Getter
 	private final List<SubCommand> subCommands = new ArrayList<>();
 
 	public EasterCommand(EasterEggs plugin) {
 		this.plugin = plugin;
+		this.commandFile = new CommandFile(plugin);
+
 		plugin.getCommand("easter").setExecutor(this);
 
 		subCommands.add(new Categories());
+		subCommands.add(new Generate(this));
 		subCommands.add(new Help(this));
 		subCommands.add(new Place());
+		subCommands.add(new Progress(plugin));
 		subCommands.add(new Reload(plugin));
 		subCommands.add(new Remove());
-		subCommands.add(new Test());
+		subCommands.add(new Rewards(plugin));
 	}
 
 	@Override

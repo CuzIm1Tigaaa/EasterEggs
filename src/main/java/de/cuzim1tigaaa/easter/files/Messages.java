@@ -67,14 +67,26 @@ public class Messages {
 		messagesFile = YamlConfiguration.loadConfiguration(messageFile);
 		messagesFile.options().setHeader(List.of("Alle Chatnachrichten, die das Plugin nutzt"));
 
-		set(Paths.MESSAGES_SENDER,              "&cDu musst ein Spieler sein, um diesen Befehl ausführen zu können!");
-		set(Paths.MESSAGES_PERMISSION,          "&cDu darfst diesen Befehl nicht benutzen!");
-		set(Paths.MESSAGES_SYNTAX,              "&cFalsche Benutzung! &8» &c%SYNTAX%");
-		set(Paths.MESSAGES_RELOAD,              "&7Das Plugin wurde neu geladen! &8[&9%TIME%ms&8]");
-		set(Paths.MESSAGES_GUI_NO_DATA,         "&cEs wurden keine Daten gefunden!");
+		set(Paths.MESSAGES_SENDER,                  "&cDu musst ein Spieler sein, um diesen Befehl ausführen zu können!");
+		set(Paths.MESSAGES_PERMISSION,              "&cDu darfst diesen Befehl nicht benutzen!");
+		set(Paths.MESSAGES_SYNTAX,                  "&cFalsche Benutzung! &8» &c%SYNTAX%");
+		set(Paths.MESSAGES_RELOAD,                  "&7Das Plugin wurde neu geladen! &8[&9%TIME%ms&8]");
+		set(Paths.MESSAGES_GUI_NO_DATA,             "&cEs wurden keine Daten gefunden!");
+		set(Paths.MESSAGES_PLAYER_NOT_FOUND,        "&cDer Spieler &b%player% &cwurde nicht gefunden!");
+
+		set(Paths.MESSAGES_EGG_FOUND,               "&aDu hast ein neues Oster-Ei gefunden!");
+		set(Paths.MESSAGES_EGG_ALREADY,             "&cDu hast dieses Oster-Ei bereits gefunden!");
+		set(Paths.COMMANDS_PLACE_EGG,               "&7Du hast ein neues Oster-Ei platziert!");
+		set(Paths.COMMANDS_PLACE_AIR,               "&cSchaue einen Block an, um ein Oster-Ei zu platzieren!");
+		set(Paths.COMMANDS_PLACE_OCCUPIED,          "&cDieser Block ist bereits belegt!");
+		set(Paths.COMMANDS_PLACE_CATEGORY_NULL,     "&cDie Kategorie &b%CATEGORY% &cexistiert nicht!");
+		set(Paths.COMMANDS_PLACE_CATEGORY_TEXTURE,  "&cWarnung: Die Kategorie &b%CATEGORY% &chat keine Textur definiert!");
+		set(Paths.COMMANDS_REMOVE_JOIN,             "&7Klicke auf ein Oster-Ei, um es zu entfernen!");
+		set(Paths.COMMANDS_REMOVE_EGG,              "&7Du hast dieses Oster-Ei erfolgreich entfernt!");
 
 		messagesFile.save(messageFile);
 	}
+
 	private void set(String path, String message) {
 		messagesFile.set(path, messagesFile.getString(path, message));
 	}

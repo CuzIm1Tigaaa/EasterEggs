@@ -35,14 +35,11 @@ public class Reload extends SubCommand {
 	}
 
 	@Override
-	public String getUsage() {
-		return super.getUsage() + "reload";
-	}
-
-	@Override
 	public void execute(Player player, String[] args) {
-		if(!player.hasPermission(this.getPermission()))
+		if(!player.hasPermission(this.getPermission())) {
+			Messages.getMessages().send(player, Paths.MESSAGES_PERMISSION);
 			return;
+		}
 
 		long start = System.currentTimeMillis();
 		plugin.reload();

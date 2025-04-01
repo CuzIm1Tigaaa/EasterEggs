@@ -1,17 +1,15 @@
 package de.cuzim1tigaaa.easter.utils;
 
 import de.cuzim1tigaaa.easter.EasterEggs;
+import de.cuzim1tigaaa.easter.files.Config;
+import de.cuzim1tigaaa.easter.files.Paths;
 import de.cuzim1tigaaa.easter.utils.egg.Egg;
 import de.cuzim1tigaaa.easter.utils.egg.EggUtils;
-import de.cuzim1tigaaa.easter.utils.progress.PlayerProgress;
 import de.cuzim1tigaaa.easter.utils.progress.ProgressUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Highlight {
@@ -24,8 +22,16 @@ public class Highlight {
 	}
 
 	public void startHighlight() {
+		if(!Config.getConfig().getBoolean(Paths.CONFIG_HIGHLIGHT_USE))
+			return;
+
 		if(taskId != null)
 			return;
+
+		ProgressUtils progressUtils = plugin.getProgressUtils();
+		final double distance = Math.pow(Config.getConfig().getDouble(Paths.CONFIG_HIGHLIGHT_DISTANCE), 2.0);
+		final Particle particle = (Particle) EasterEggs.getEnumByName(Config.getConfig().getString(Paths.CONFIG_HIGHLIGHT_PARTICLE),
+				Particle.class, Particle.HAPPY_VILLAGER);
 
 		taskId = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
 			Set<Player> players = new HashSet<>(Bukkit.getOnlinePlayers());
@@ -33,6 +39,7 @@ public class Highlight {
 					.collect(Collectors.toSet());
 
 			players.forEach(player -> {
+				final UUID uuid = player.getUniqueId();
 				eggs.stream()
 						.filter(egg -> {
 							Location loc = egg.getLocation();
@@ -40,15 +47,15 @@ public class Highlight {
 								return false;
 							if(!loc.getWorld().equals(player.getWorld()))
 								return false;
-							if(loc.distanceSquared(player.getLocation()) < 50)
+
+							if(progressUtils.hasPlayerFound(uuid, egg))
 								return false;
 
-							PlayerProgress progress = ProgressUtils.getPlayerProgressByUUID(player.getUniqueId());
-							return ProgressUtils.hasPlayerProgress(progress, egg);
+							return loc.distanceSquared(player.getLocation()) < distance;
 						})
 						.forEach(egg -> {
-							Location loc = egg.getLocation().add(0, .5, 0);
-							player.spawnParticle(Particle.HAPPY_VILLAGER, loc, 1, 0, 1, 0, 0);
+							Location loc = egg.getLocation().clone().add(0, 1, 0);
+							player.spawnParticle(particle, loc, 10, 0, 1, 0.5, 0.5);
 						});
 			});
 		}, 100L, 15L).getTaskId();

@@ -23,14 +23,11 @@ public class Remove extends SubCommand {
 	}
 
 	@Override
-	public String getUsage() {
-		return super.getUsage() + "remove";
-	}
-
-	@Override
 	public void execute(Player player, String[] args) {
-		if(!player.hasPermission(this.getPermission()))
+		if(!player.hasPermission(this.getPermission())) {
+			Messages.getMessages().send(player, Paths.MESSAGES_PERMISSION);
 			return;
+		}
 
 		EasterEvents.getRemoveEggs().add(player.getUniqueId());
 		Messages.getMessages().send(player, Paths.COMMANDS_REMOVE_JOIN);

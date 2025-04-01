@@ -1,6 +1,7 @@
 package de.cuzim1tigaaa.easter.commands.sub;
 
 import de.cuzim1tigaaa.easter.commands.SubCommand;
+import de.cuzim1tigaaa.easter.files.Messages;
 import de.cuzim1tigaaa.easter.files.Paths;
 import de.cuzim1tigaaa.easter.gui.CategoryGUI;
 import de.cuzim1tigaaa.easter.utils.egg.Category;
@@ -34,13 +35,15 @@ public class Categories extends SubCommand {
 
 	@Override
 	public String getUsage() {
-		return super.getUsage() + "categories [page]";
+		return super.getUsage() + " [page]";
 	}
 
 	@Override
 	public void execute(Player player, String[] args) {
-		if(!player.hasPermission(this.getPermission()))
+		if(!player.hasPermission(this.getPermission())) {
+			Messages.getMessages().send(player, Paths.MESSAGES_PERMISSION);
 			return;
+		}
 
 		int page = 1;
 		if(args.length >= 2) {

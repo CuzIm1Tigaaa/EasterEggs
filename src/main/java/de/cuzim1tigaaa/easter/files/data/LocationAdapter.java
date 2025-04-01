@@ -1,4 +1,4 @@
-package de.cuzim1tigaaa.easter.files;
+package de.cuzim1tigaaa.easter.files.data;
 
 import com.google.gson.*;
 import org.bukkit.Bukkit;
